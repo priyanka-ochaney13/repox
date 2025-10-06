@@ -5,15 +5,18 @@ import App from './App.jsx'
 import RepositoriesPage from './pages/Repositories.jsx';
 import RepoDocsPage from './pages/RepoDocs.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { RepoProvider } from './store/repoStore.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-  <Route path="/repositories" element={<RepositoriesPage />} />
-  <Route path="/docs/:owner/:name" element={<RepoDocsPage />} />
-      </Routes>
+      <RepoProvider>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/repositories" element={<RepositoriesPage />} />
+          <Route path="/docs/:owner/:name" element={<RepoDocsPage />} />
+        </Routes>
+      </RepoProvider>
     </BrowserRouter>
   </StrictMode>
 )

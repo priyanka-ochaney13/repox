@@ -114,6 +114,14 @@
 .repo-status-row { margin-bottom: .65rem; }
 .status-badge { display:inline-flex; align-items:center; gap:.35rem; font-size: .7rem; padding:.4rem .65rem; border-radius: .55rem; font-weight:500; letter-spacing:.05em; }
 .status-badge.ready { background:#0d3a28; color:#4ade80; border: 1px solid #1d6a49; }
+.status-badge.pending { background:#2c253a; color:#c084fc; border:1px solid #533b74; }
+.status-badge.processing { background:#102b42; color:#38bdf8; border:1px solid #1d4c70; }
+.status-badge.failed { background:#3a1515; color:#f87171; border:1px solid #7f1d1d; }
+.retry-link { background:none; border:none; color:#60a5fa; cursor:pointer; font-size:.65rem; text-decoration:underline; padding:0 .2rem; }
+.retry-link:hover { color:#93c5fd; }
+.card-overlay-progress { position:absolute; inset:0; background:rgba(10,16,25,.55); display:flex; align-items:center; justify-content:center; border-radius:1rem; }
+.spinner { width:26px; height:26px; border:3px solid rgba(255,255,255,.2); border-top-color:#3b82f6; border-radius:50%; animation:spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 .repo-updated { font-size: .6rem; opacity:.6; margin-bottom: .9rem; }
 .repo-actions { margin-top: auto; display:flex; gap:.65rem; }
 .small-btn { padding:.75rem 1.3rem; font-size:.75rem; }
@@ -181,6 +189,12 @@ select:focus, .modal-form input[type=number]:focus { border-color:#257bff; box-s
 .doc-section h2 { margin:.2rem 0 1rem; font-size:1.35rem; }
 .doc-section p { margin:0 0 1rem; line-height:1.5; color:#c4ced8; }
 .md-block { background:#111a27; border:1px solid #1f2b3b; border-radius:.8rem; padding:1rem 1.25rem; overflow-x:auto; font-size:.8rem; line-height:1.45; }
+.markdown-body h1 { font-size:1.6rem; margin:.2rem 0 1rem; }
+.markdown-body h2 { font-size:1.3rem; margin:1.4rem 0 .6rem; }
+.markdown-body p { margin:0 0 .9rem; }
+.markdown-body code { background:#162132; padding:.15rem .35rem; border-radius:.4rem; font-size:.75rem; }
+.markdown-body pre code { background:transparent; padding:0; }
+.markdown-body ul { padding-left:1.1rem; }
 .summary-list { margin:.3rem 0 0; padding-left:1.1rem; font-size:.85rem; line-height:1.4; }
 .summary-list li { margin-bottom:.4rem; }
 .changelog { list-style:none; padding:0; margin:.5rem 0 0; font-size:.8rem; }

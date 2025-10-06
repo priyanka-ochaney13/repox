@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
 export function StatsStrip({ stats }) {
@@ -56,13 +57,14 @@ export function FeaturesSection({ features }) {
 }
 
 export function CTASection() {
+  const navigate = useNavigate();
   return (
     <section id="cta" className="section cta padded" aria-labelledby="cta-heading">
       <div className="section-inner cta-inner">
         <h2 id="cta-heading" className="section-title">Ready to Automate Your Docs?</h2>
         <p className="section-lead">Join thousands of developers who've already saved countless hours with RepoX</p>
         <div className="cta-row">
-          <button className="btn-primary">Connect Your First Repo →</button>
+          <button className="btn-primary" onClick={() => navigate('/repositories')}>Connect Your First Repo →</button>
         </div>
       </div>
     </section>

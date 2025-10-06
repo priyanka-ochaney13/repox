@@ -41,7 +41,7 @@ function App() {
           </p>
           <div className="cta-row">
             <button className="btn-primary" onClick={() => navigate('/repositories')}>Get Started →</button>
-            <button className="btn-secondary">Live Demo</button>
+            
           </div>
         </section>
         <StatsStrip stats={stats} />

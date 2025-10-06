@@ -2,16 +2,12 @@ import React, { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
+import { useRepos } from '../store/repoStore.jsx';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import '../App.css';
 
-// Temporary in-memory data source (mirrors SAMPLE_REPOS structure)
-const ALL_REPOS = [
-  { name: 'DSA-prac', owner: 'priyanka-ochaney13', desc: 'Practice data structures & algorithms.', stars: 0, lang: 'JavaScript', updated: 'Oct 4, 2025', status: 'Ready', readme: `# DSA-prac\n\nThis repository contains data structure & algorithm practice solutions.\n\n## Contents\n- Arrays\n- Linked Lists\n- Trees\n- Graphs\n\n## Automation\nGenerated documentation sample.` },
-  { name: 'repox', owner: 'priyanka-ochaney13', desc: 'RepoX core service.', stars: 0, lang: 'TypeScript', updated: 'Oct 4, 2025', status: 'Ready', readme: `# RepoX\nCore service powering automated documentation.` },
-  { name: 'api-gateway', owner: 'acme', desc: 'Scalable API gateway with rate limiting and authentication', stars: 156, lang: 'Go', updated: 'Jan 14, 2024', status: 'Ready', readme: `# API Gateway\n\nHigh-performance gateway written in Go.` },
-  { name: 'ml-toolkit', owner: 'opensource', desc: 'Machine learning toolkit for data scientists', stars: 0, lang: 'Python', updated: 'Sep 22, 2025', status: 'Ready', readme: `# ML Toolkit\nMachine learning helper utilities.` },
-  { name: 'react-dashboard', owner: 'acme', desc: 'Modern React dashboard with analytics and data', stars: 0, lang: 'TypeScript', updated: 'Jun 01, 2025', status: 'Ready', readme: `# React Dashboard\nAnalytics dashboard components.` },
-];
+// Data now pulled from repo store
 
 const DOC_SECTIONS = [
   { id: 'overview', label: 'Overview' },
@@ -22,7 +18,8 @@ const DOC_SECTIONS = [
 
 export default function RepoDocsPage() {
   const { owner, name } = useParams();
-  const repo = useMemo(() => ALL_REPOS.find(r => r.owner === owner && r.name === name), [owner, name]);
+  const { repos } = useRepos();
+  const repo = useMemo(() => repos.find(r => r.owner === owner && r.name === name), [repos, owner, name]);
 
   if (!repo) {
     return (
@@ -65,32 +62,35 @@ export default function RepoDocsPage() {
             <div className="docs-content">
               <section id="overview" className="doc-section">
                 <h2>Overview</h2>
-                <p>{repo.desc || 'No description provided.'}</p>
+                <p>{repo.description || 'No description provided.'}</p>
                 <div className="meta-row">
-                  <span className="status-badge ready">{repo.status}</span>
-                  <span className="tiny-meta">Updated {repo.updated}</span>
+                  <span className={`status-badge ${repo.status.toLowerCase()}`}>{repo.status}</span>
+                  <span className="tiny-meta">Updated {repo.updatedAt}</span>
                 </div>
               </section>
               <section id="readme" className="doc-section">
                 <h2>README</h2>
-                <pre className="md-block"><code>{repo.readme}</code></pre>
+                <div className="md-block markdown-body">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{repo.docs?.readme || '*No README*'}</ReactMarkdown>
+                </div>
               </section>
               <section id="summary" className="doc-section">
                 <h2>Code Summary</h2>
-                <p>Automated high-level summary of core modules (placeholder).</p>
-                <ul className="summary-list">
-                  <li><strong>src/algorithms/</strong> — Data structure & algorithm implementations.</li>
-                  <li><strong>tests/</strong> — Unit tests for core logic.</li>
-                  <li><strong>scripts/</strong> — Utility scripts.</li>
-                </ul>
+                <p>{repo.docs?.summary || 'Summary generation pending.'}</p>
+                {repo.docs?.summary && !repo.docs?.summary.includes('pending') && (
+                  <ul className="summary-list">
+                    <li><strong>src/</strong> — Detected source modules overview (placeholder).</li>
+                  </ul>
+                )}
               </section>
               <section id="changelog" className="doc-section">
                 <h2>Changelog</h2>
-                <ul className="changelog">
-                  <li><span className="chg-date">2025-10-04</span> Added new graph algorithms.</li>
-                  <li><span className="chg-date">2025-09-20</span> Refactored tree traversal utilities.</li>
-                  <li><span className="chg-date">2025-09-01</span> Initial auto-generated docs.</li>
-                </ul>
+                {repo.docs?.changelog?.length ? (
+                  <ul className="changelog">
+                    {repo.docs.changelog.map((c,i)=>(
+                      <li key={i}><span className="chg-date">{c.date}</span>{c.entry}</li>
+                    ))}
+                  </ul>) : <p>No changelog entries yet.</p>}
               </section>
             </div>
           </div>

@@ -1,42 +1,30 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useRepos } from '../store/repoStore.jsx';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
 import '../App.css';
 
-const SAMPLE_REPOS = [
-  { name: 'DSA-prac', owner: 'priyanka-ochaney13', desc: '', stars: 0, lang: '', updated: 'Oct 4, 2025', status: 'Ready' },
-  { name: 'repox', owner: 'priyanka-ochaney13', desc: '', stars: 0, lang: '', updated: 'Oct 4, 2025', status: 'Ready' },
-  { name: 'api-gateway', owner: 'acme', desc: 'Scalable API gateway with rate limiting and authentication', stars: 156, lang: 'Go', updated: 'Jan 14, 2024', status: 'Ready' },
-  { name: 'ml-toolkit', owner: 'opensource', desc: 'Machine learning toolkit for data scientists', stars: 0, lang: '', updated: 'Sep 22, 2025', status: 'Ready' },
-  { name: 'react-dashboard', owner: 'acme', desc: 'Modern React dashboard with analytics and data', stars: 0, lang: '', updated: 'Jun 01, 2025', status: 'Ready' },
-];
+// Data now sourced from repo store
 
 export default function RepositoriesPage() {
   const [query, setQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [repos, setRepos] = useState(SAMPLE_REPOS);
+  const { repos, connectRepo, retryGeneration } = useRepos();
   const navigate = useNavigate();
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
-    return repos.filter(r => r.name.toLowerCase().includes(q) || r.owner.toLowerCase().includes(q));
+    return repos.filter(r => (r.name + ' ' + r.owner).toLowerCase().includes(q));
   }, [query, repos]);
 
-  const handleAddRepo = useCallback((data) => {
-    setRepos(prev => [
-      {
-        name: data.name,
-        owner: data.owner,
-        desc: data.description,
-        stars: Number(data.stars) || 0,
-        lang: data.language,
-        updated: new Date().toLocaleDateString('en-US',{ month:'short', day:'numeric', year:'numeric'}),
-        status: 'Ready'
-      },
-      ...prev
-    ]);
-  }, []);
+  const handleAddRepo = useCallback(async (formData) => {
+    await connectRepo(formData.githubUrl, {
+      description: formData.description,
+      language: formData.language,
+      stars: formData.stars
+    });
+  }, [connectRepo]);
 
   useEffect(() => {
     function onKey(e){ if(e.key==='Escape' && showModal) setShowModal(false); }
@@ -66,7 +54,7 @@ export default function RepositoriesPage() {
             />
           </div>
           <div className="repo-grid" aria-live="polite">
-            {filtered.map(repo => <RepoCard key={repo.name+repo.owner} repo={repo} onViewDocs={() => navigate(`/docs/${repo.owner}/${repo.name}`)} />)}
+            {filtered.map(repo => <RepoCard key={repo.id || (repo.owner+repo.name)} repo={repo} onRetry={() => retryGeneration(repo.id)} onViewDocs={() => navigate(`/docs/${repo.owner}/${repo.name}`)} />)}
           </div>
         </div>
         {showModal && <ConnectRepositoryModal onClose={() => setShowModal(false)} onSubmit={(d)=>{handleAddRepo(d); setShowModal(false);}} />}
@@ -76,7 +64,7 @@ export default function RepositoriesPage() {
   );
 }
 
-function RepoCard({ repo, onViewDocs }) {
+function RepoCard({ repo, onViewDocs, onRetry }) {
   return (
     <div className="repo-card">
       <div className="repo-top">
@@ -86,19 +74,23 @@ function RepoCard({ repo, onViewDocs }) {
           <div className="repo-owner">{repo.owner}</div>
         </div>
       </div>
-      {repo.desc && <p className="repo-desc">{repo.desc}</p>}
+      {repo.description && <p className="repo-desc">{repo.description}</p>}
       <div className="repo-inline-meta">
         {repo.lang && <span className="repo-lang">{repo.lang}</span>}
         {repo.stars ? <span className="repo-stars">⭐ {repo.stars}</span> : null}
       </div>
       <div className="repo-status-row">
-        <span className="status-badge ready">{repo.status}</span>
+        <span className={`status-badge ${repo.status.toLowerCase()}`}>{repo.status}</span>
+        {repo.status === 'Failed' && <button className="retry-link" onClick={onRetry}>Retry</button>}
       </div>
-      <div className="repo-updated">Updated {repo.updated}</div>
+      <div className="repo-updated">Updated {new Date(repo.updatedAt || Date.now()).toLocaleDateString(undefined,{ month:'short', day:'numeric', year:'numeric' })}</div>
       <div className="repo-actions">
-        <button className="btn-primary small-btn" onClick={onViewDocs}>📄 View Docs</button>
+        <button className="btn-primary small-btn" onClick={onViewDocs} disabled={repo.status !== 'Ready'}>{repo.status !== 'Ready' ? '…' : '📄 View Docs'}</button>
         <button className="square-btn" aria-label="More actions"></button>
       </div>
+      {repo.status !== 'Ready' && <div className="card-overlay-progress" aria-hidden>
+          {repo.status === 'Processing' && <div className="spinner" />}
+      </div>}
     </div>
   );
 }
@@ -128,12 +120,7 @@ function ConnectRepositoryModal({ onClose, onSubmit }) {
     e.preventDefault();
     setTouched(true);
     if(!parsed) return;
-    onSubmit({
-      ...parsed,
-      description,
-      language,
-      stars
-    });
+    onSubmit({ githubUrl, description, language, stars });
   }
 
   return (
