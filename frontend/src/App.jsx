@@ -1,5 +1,6 @@
 import './App.css';
 import Header from './components/Header.jsx';
+import { useAuth } from './context/AuthContext.jsx';
 import Footer from './components/Footer.jsx';
 import { StatsStrip, ProblemSection, FeaturesSection, CTASection } from './components/Sections.jsx';
 import { useNavigate } from 'react-router-dom';
@@ -25,6 +26,7 @@ const features = [
 
 function App() {
   const navigate = useNavigate();
+  const { user, setAuthModalOpen, setAuthModalTab, setRedirectPath } = useAuth();
   return (
     <>
       <Header />
@@ -40,8 +42,19 @@ function App() {
             so your team can focus on innovation instead of tedious manual work.
           </p>
           <div className="cta-row">
-            <button className="btn-primary" onClick={() => navigate('/repositories')}>Get Started →</button>
-            
+            <button
+              className="btn-primary"
+              onClick={() => {
+                if (!user) {
+                  setAuthModalTab('login');
+                  setRedirectPath('/repositories');
+                  setAuthModalOpen(true);
+                } else {
+                  navigate('/repositories');
+                }
+              }}
+            >Get Started →</button>
+            <button className="btn-secondary">Live Demo</button>
           </div>
         </section>
         <StatsStrip stats={stats} />

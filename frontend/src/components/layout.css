@@ -32,8 +32,9 @@
   color: transparent;
 }
 
+.rx-nav { display:flex; align-items:center; gap: 1.1rem; }
 .rx-nav a {
-  margin-left: 1.25rem;
+  margin-left: 0;
   font-size: 0.95rem;
   color: #d0d7e2;
   text-decoration: none;
@@ -50,6 +51,9 @@
 }
 .rx-nav a:hover:after, .rx-nav a:focus:after { width: 100%; }
 .rx-nav a:hover { color: #fff; }
+
+/* ensure auth pill stays to the right with consistent spacing */
+.rx-nav .user-pill { margin-left: .4rem; }
 
 .rx-footer {
   background: #0e1320;
