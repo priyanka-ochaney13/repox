@@ -1,0 +1,21 @@
+{
+  "name": "repox-backend",
+  "version": "0.1.0",
+  "description": "Minimal serverless Express backend for repox",
+  "main": "handler.js",
+  "scripts": {
+    "start:local": "node handler-local.js",
+    "deploy": "npx serverless deploy",
+    "dev:offline": "npx serverless offline --noPrependStageInUrl"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "serverless-http": "^3.0.0"
+  },
+  "devDependencies": {
+    "serverless": "^3.40.0",
+    "serverless-offline": "^12.0.0"
+  }
+}
