@@ -1,9 +1,97 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+#root main {
+  flex: 1;
+}
+
+.hero {
+  padding: 5rem 1.25rem 3rem;
   text-align: center;
 }
+
+.hero-badge {
+  display: inline-block;
+  background: #041b2b;
+  padding: .5rem 1rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  font-size: .75rem;
+  letter-spacing: .05em;
+  color: #4fd3ff;
+  margin-bottom: 1.25rem;
+}
+
+.hero h1 { font-size: clamp(2.2rem,6vw,3.5rem); line-height: 1.1; margin: 0 0 1.25rem; }
+.hero h1 .gradient {
+  background: linear-gradient(90deg,#14b8ff,#3b82f6,#6366f1);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.hero p { max-width: 760px; margin: 0 auto 2rem; color: #c9d2de; }
+
+.cta-row { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+.btn-primary {
+  background: linear-gradient(90deg,#14b8ff,#3b82f6,#6366f1);
+  color: #fff;
+  border: none;
+  padding: .9rem 1.6rem;
+  border-radius: .75rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: .95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  box-shadow: 0 6px 18px -6px #0d3b55;
+}
+.btn-primary:hover { filter: brightness(1.05); }
+
+.btn-secondary { background: #ffffff; color: #0b1625; padding: .9rem 1.6rem; border-radius: .75rem; border: 1px solid #e5e7eb; font-weight: 500; cursor: pointer; }
+.btn-secondary:hover { background: #f1f5f9; }
+
+.spacer { height: 2rem; }
+
+/* --- Stats Strip --- */
+.stats-strip { padding: 0 1rem 3rem; margin-top: -2rem; }
+.stats-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); max-width: 960px; margin: 0 auto; }
+.stat-card { background: linear-gradient(145deg,#121b2d,#141a28); border: 1px solid rgba(255,255,255,0.08); border-radius: .75rem; padding: 1.25rem 1rem; text-align: center; }
+.stat-value { font-size: 2rem; font-weight: 700; background: linear-gradient(90deg,#14b8ff,#3b82f6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.stat-label { font-size: .8rem; letter-spacing: .05em; text-transform: uppercase; opacity: .8; margin-top: .25rem; }
+
+/* --- Sections Shared --- */
+.section { position: relative; }
+.padded { padding: 4rem 1.25rem 4.5rem; }
+.section-inner { max-width: 1180px; margin: 0 auto; }
+.section-title { font-size: clamp(2rem,4.4vw,2.8rem); line-height: 1.15; text-align: center; margin: 0 0 1.5rem; }
+.section-lead { max-width: 840px; margin: 0 auto 2.25rem; text-align: center; color: #c9d2de; font-size: 1.05rem; }
+.gradient-text { background: linear-gradient(90deg,#14b8ff,#3b82f6,#6366f1); background-clip: text; -webkit-background-clip: text; color: transparent; }
+
+/* Problem & Feature cards grid */
+.card-grid { display: grid; gap: 1.5rem; }
+.three-cols { grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); }
+.two-cols.four-rows { grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); }
+
+.info-card { background: linear-gradient(165deg,#141b2b,#121726); border: 1px solid rgba(255,255,255,0.09); border-radius: .9rem; padding: 1.5rem 1.35rem 1.65rem; position: relative; overflow: hidden; }
+.info-card:before { content:""; position:absolute; inset:0; pointer-events:none; background: radial-gradient(circle at 10% 10%,rgba(255,255,255,0.08),transparent 60%); opacity:.4; }
+.info-card h3 { margin: 0 0 .75rem; font-size: 1.05rem; }
+.info-card p { margin: 0; font-size: .9rem; line-height: 1.4; color: #b6c1ce; }
+
+.icon-badge { width: 44px; height: 44px; display:flex; align-items:center; justify-content:center; font-size: 1.2rem; background: #0d2233; border-radius: .85rem; margin-bottom: .9rem; box-shadow: 0 4px 10px -4px rgba(0,0,0,.5); }
+.icon-badge[data-color='--c1'] { background: linear-gradient(135deg,#0ea5e9,#0369a1); }
+.icon-badge[data-color='--c2'] { background: linear-gradient(135deg,#c026d3,#9333ea); }
+.icon-badge[data-color='--c3'] { background: linear-gradient(135deg,#f97316,#ea580c); }
+.icon-badge[data-color='--c4'] { background: linear-gradient(135deg,#22c55e,#15803d); }
+
+/* CTA Section */
+.cta { background: linear-gradient(145deg,#0e1728,#0d1322); border-top: 1px solid rgba(255,255,255,0.07); }
+.cta-inner { text-align: center; }
+
+@media (max-width: 760px) {
+  .stats-strip { margin-top: 0; }
+  .section-title { font-size: clamp(1.9rem,7vw,2.6rem); }
+  .padded { padding: 3.5rem 1rem 3.5rem; }
+}
+
 
 .logo {
   height: 6em;

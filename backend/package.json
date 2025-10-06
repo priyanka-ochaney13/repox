@@ -1,5 +1,5 @@
 {
-  "name": "repox-backend",
+  "name": "backend",
   "version": "0.1.0",
   "description": "Minimal serverless Express backend for repox",
   "main": "handler.js",
